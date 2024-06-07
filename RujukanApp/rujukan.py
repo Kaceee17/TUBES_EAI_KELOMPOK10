@@ -25,7 +25,22 @@ def root():
 @app.route('/rujukan', methods=['GET'])
 def get_rujukan():
     cursor = mysql.connection.cursor()
-    cursor.execute("SELECT id, patient_id, doctor_id, referral_date, appointment_date, status, notes, created_at, updated_at FROM referrals")
+
+    # Extract query parameters
+    patient_id = request.args.get('patient_id')
+    doctor_id = request.args.get('doctor_id')
+    status = request.args.get('status')
+
+    query = "SELECT id, patient_id, doctor_id, referral_date, appointment_date, status, notes, created_at, updated_at FROM referrals WHERE 1=1"
+
+    if patient_id:
+        query += f" AND patient_id = '{patient_id}'"
+    if doctor_id:
+        query += f" AND doctor_id = '{doctor_id}'"
+    if status:
+        query += f" AND status = '{status}'"
+
+    cursor.execute(query)
     rows = cursor.fetchall()
     
     column_names = [desc[0] for desc in cursor.description]
@@ -41,6 +56,7 @@ def get_rujukan():
     
     cursor.close()
     return jsonify(result)
+
 
 @app.route('/rujukan/<int:id>', methods=['GET'])
 def get_single_rujukan(id):
