@@ -18,7 +18,7 @@ def root():
 def obat():
     if request.method == 'GET':
         cursor = mysql.connection.cursor()
-        cursor.execute("SELECT * FROM obat")
+        cursor.execute("SELECT LPAD(id, 3, '0') AS id, nama, deskripsi, kategori, tanggal_kedaluwarsa, jumlah_stok, harga FROM obat")
 
         column_names = [i[0] for i in cursor.description]
 
