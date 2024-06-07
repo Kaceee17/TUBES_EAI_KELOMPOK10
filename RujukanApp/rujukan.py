@@ -63,59 +63,63 @@ def get_single_rujukan(id):
 
 @app.route('/addrujukan', methods=['POST'])
 def addrujukan():
-    data = request.json
-    patient_id = data.get('patient_id')
-    doctor_id = data.get('doctor_id')
-    referral_date = data.get('referral_date')
-    appointment_date = data.get('appointment_date')
-    status = data.get('status')
-    notes = data.get('notes')
+    try:
+        data = request.json
+        patient_id = data.get('patient_id')
+        doctor_id = data.get('doctor_id')
+        referral_date = data.get('referral_date')
+        appointment_date = data.get('appointment_date')
+        status = data.get('status')
+        notes = data.get('notes')
 
-    # Validation checks
-    if not str(patient_id).startswith('1') or len(str(patient_id)) != 3:
-        return generate_response(400, 'Patient ID does not meet requirements')
-    if not str(doctor_id).startswith('2') or len(str(doctor_id)) != 3:
-        return generate_response(400, 'Doctor ID does not meet requirements')
+        # Validation checks
+        if not str(patient_id).startswith('1') or len(str(patient_id)) != 3:
+            return generate_response(400, 'Patient ID does not meet requirements')
+        if not str(doctor_id).startswith('2') or len(str(doctor_id)) != 3:
+            return generate_response(400, 'Doctor ID does not meet requirements')
 
-    cursor = mysql.connection.cursor()
-    sql = "INSERT INTO referrals (patient_id, doctor_id, referral_date, appointment_date, status, notes) VALUES (%s, %s, %s, %s, %s, %s)"
-    val = (patient_id, doctor_id, referral_date, appointment_date, status, notes)
+        cursor = mysql.connection.cursor()
+        sql = "INSERT INTO referrals (patient_id, doctor_id, referral_date, appointment_date, status, notes) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (patient_id, doctor_id, referral_date, appointment_date, status, notes)
+
+        cursor.execute(sql, val)
+        mysql.connection.commit()
+        cursor.close()
+        return generate_response(201, 'Referral added successfully')
+    except Exception as e:
+        return generate_response(500, f'Error occurred while adding referral: {str(e)}')
     
-    cursor.execute(sql, val)
-    mysql.connection.commit()
-    cursor.close()
-    return generate_response(201, 'Referral added successfully')
-
 @app.route('/update_referral/<int:id>', methods=['PUT'])
 def update_referral(id):
-    data = request.json
-    patient_id = data.get('patient_id')
-    doctor_id = data.get('doctor_id')
-    referral_date = data.get('referral_date')
-    appointment_date = data.get('appointment_date')
-    status = data.get('status')
-    notes = data.get('notes')
+    try:
+        data = request.json
+        patient_id = data.get('patient_id')
+        doctor_id = data.get('doctor_id')
+        referral_date = data.get('referral_date')
+        appointment_date = data.get('appointment_date')
+        status = data.get('status')
+        notes = data.get('notes')
 
-    cursor = mysql.connection.cursor()
-    sql = "UPDATE referrals SET patient_id = %s, doctor_id = %s, referral_date = %s, appointment_date = %s, status = %s, notes = %s WHERE id = %s"
-    val = (patient_id, doctor_id, referral_date, appointment_date, status, notes, id)
-    
-    cursor.execute(sql, val)
-    mysql.connection.commit()
-    cursor.close()
-    return generate_response(200, f'Referral with id {id} updated successfully')
+        cursor = mysql.connection.cursor()
+        sql = "UPDATE referrals SET patient_id = %s, doctor_id = %s, referral_date = %s, appointment_date = %s, status = %s, notes = %s WHERE id = %s"
+        val = (patient_id, doctor_id, referral_date, appointment_date, status, notes, id)
+
+        cursor.execute(sql, val)
+        mysql.connection.commit()
+        cursor.close()
+        return generate_response(200, f'Referral with id {id} updated successfully')
+    except Exception as e:
+        return generate_response(500, f'Error occurred while updating referral with id {id}: {str(e)}')
 
 @app.route('/delete_referral/<int:id>', methods=['DELETE'])
 def delete_referral(id):
-    cursor = mysql.connection.cursor()
-
     try:
+        cursor = mysql.connection.cursor()
         cursor.execute("DELETE FROM referrals WHERE id = %s", (id,))
         mysql.connection.commit()
         cursor.close()
         return generate_response(200, f'Referral with id {id} deleted successfully')
     except Exception as e:
-        cursor.close()
         return generate_response(500, f'Error occurred while deleting referral with id {id}: {str(e)}')
 
 if __name__ == '__main__':
