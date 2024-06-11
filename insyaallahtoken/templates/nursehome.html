@@ -1,0 +1,103 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Home</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome Nurse</h1>
+        <a href="/api/rujukan/rujukan" class="btn btn-primary">Read Rujukan</a>
+        <a href="/api/rujukan/addrujukan" class="btn btn-primary">Create Rujukan</a>
+        <a href="/api/rujukan/update_referral/<int:id>" class="btn btn-primary">Edit Rujukan</a>
+
+        <a href="/api/Obat/Obat" class="btn btn-primary">Read Obat</a>
+        <a href="/api/Obat/addObat" class="btn btn-primary">Create Obat</a>
+        <a href="/api/Obat/Update_Obat/<int:id>" class="btn btn-primary">Edit Obat</a>
+        <a href="/api/Obat/Delete_Obat/<int:id>" class="btn btn-primary">Delete Obat</a>
+
+        <a href="/api/resepobat/resepbaca" class="btn btn-primary">Read Resep</a>
+        <a href="/api/resepobat/resep" class="btn btn-primary">Create Resep</a>
+        <a href="/api/resepobat/resep/<int:id>" class="btn btn-primary">Edit Resep</a>
+    </div>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Perawat</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            font-family: Inter;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3 class="text-center">WELCOME</h3>
+        <a href="/nursehome?access_token={{ access_token }}" class="sidebar-link">Home</a>
+        <a href="/api/Obat/Obat?access_token={{ access_token }}" class="sidebar-link">Obat</a>
+        <a href="/api/resepobat/resepbaca?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
+        <a href="/api/rujukan/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a>
+    </div>
+    
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Nurse Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form action="/logout?access_token={{ access_token }}" method="get">
+                            <input type="submit" value="Logout">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container-md mt-4">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card width-150px">
+                        <div class="card-body">
+                            <h5 class="card-title">Selamat Datang, {{username}}!</h5>
+                            <p class="card-text">Anda dapat mengakses dan mengelola data obat, resep obat, dan rujukan medis di sini.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

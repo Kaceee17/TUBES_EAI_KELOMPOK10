@@ -1,0 +1,238 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pasien</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3>WELCOME</h3>
+        <a href="/User/dashboard.html" class="sidebar-link">Home</a>
+        <a href="/User/obat.html" class="sidebar-link">Obat</a>
+        <a href="/User/rujukan.html" class="sidebar-link">Rujukan Medis</a>
+    </div>
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Patient Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form action="/logout" method="get">
+                            <input type="submit" value="Logout">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container-md mt-4"> 
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Nama Pasien</h5>
+                            <p class="card-text">John Doe</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Umur</h5>
+                            <p class="card-text">30 Tahun</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Status Kesehatan</h5>
+                            <p class="card-text">Sehat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Obat yang Diresepkan</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Paracetamol 500mg - 3 kali sehari</li>
+                                <li class="list-group-item">Amoxicillin 500mg - 2 kali sehari</li>
+                                <li class="list-group-item">Loratadine 10mg - 1 kali sehari</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Rujukan Rumah Sakit</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Rujukan ke RSUD untuk pemeriksaan lanjutan</li>
+                                <li class="list-group-item">Rujukan ke Klinik Mata untuk pemeriksaan optik</li>
+                                <li class="list-group-item">Rujukan ke Dokter Spesialis Jantung di RS Harapan Kita</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Pasien</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3 class="text-center">WELCOME</h3>
+        <a href="/nursehome?access_token={{ access_token }}" class="sidebar-link">Home</a>
+        <a href="/api/Obat/Obat?access_token={{ access_token }}" class="sidebar-link">Obat</a>
+        <a href="/api/resepobat/resepbaca?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
+        <a href="/api/rujukan/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a>
+    </div>
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Patient Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form action="/logout" method="get">
+                            <input type="submit" value="Logout">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        
+        <div class="container-md mt-4"> <!-- Menggunakan class "container-md" untuk container medium -->
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Nama Pasien</h5>
+                            <p class="card-text">{{ username }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Status Kesehatan</h5>
+                            <p class="card-text">Sehat</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section for Prescribed Medications -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Obat yang Diresepkan</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Paracetamol 500mg - 3 kali sehari</li>
+                                <li class="list-group-item">Amoxicillin 500mg - 2 kali sehari</li>
+                                <li class="list-group-item">Loratadine 10mg - 1 kali sehari</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section for Hospital Referrals -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Rujukan Rumah Sakit</h5>
+                            <ul class="list-group">
+                                <li class="list-group-item">Rujukan ke RSUD untuk pemeriksaan lanjutan</li>
+                                <li class="list-group-item">Rujukan ke Klinik Mata untuk pemeriksaan optik</li>
+                                <li class="list-group-item">Rujukan ke Dokter Spesialis Jantung di RS Harapan Kita</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

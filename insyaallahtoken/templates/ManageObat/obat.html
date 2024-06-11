@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manajemen Obat</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3 class="text-center">WELCOME</h3>
+        <a href="/nursehome?access_token={{ access_token }}" class="sidebar-link">Home</a>
+        <a href="/api/Obat/Obat?access_token={{ access_token }}" class="sidebar-link">Obat</a>
+        <a href="/api/resepobat/resepbaca?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
+        <a href="/api/rujukan/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a>
+
+    </div>
+
+    <div id="content">
+
+        <div class="container-fluid">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Nurse Dashboard</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item">
+                            <form action="/logout" method="get">
+                                <input type="submit" value="Logout">
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        
+            <div class="mt-4">
+                <h2 class="text-center">Daftar Obat</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped centered-content">
+                        <thead>
+                            <tr>
+                                <th scope="col" class="text-center">#</th>
+                                <th scope="col">Nama Obat</th>
+                                <th scope="col">Deskripsi</th>
+                                <th scope="col">Kategori</th>
+                                <th scope="col" class="text-center">Tanggal Kadaluwarsa</th>
+                                <th scope="col" class="text-center">Jumlah Stok</th>
+                                <th scope="col" class="text-center">Harga</th>
+                                <th scope="col" class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in data %}
+                            <tr>
+                                <th scope="row" class="text-center">{{ loop.index }}</th>
+                                <td>{{ row['nama'] }}</td>
+                                <td>{{ row['deskripsi'] }}</td>
+                                <td>{{ row['kategori'] }}</td>
+                                <td class="text-center">{{ row['tanggal_kedaluwarsa'] }}</td>
+                                <td class="text-center">{{ row['jumlah_stok'] }}</td>
+                                <td class="text-center">{{ row['harga'] }}</td>
+                                <td class="text-center">
+                                    <!-- Edit button -->
+                                    <a href="/api/Obat/Edit_Obat/{{ row['id'] }}" class="btn btn-primary btn-sm">Edit</a>
+                                    <!-- Delete form -->
+                                    <form method="POST" action="/api/Obat/Delete_Obat/{{ row['id'] }}" style="display:inline;">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        
+                        </table>    
+                </div>
+                <a class="btn btn-success mb-3" href="/api/Obat/addObat">Tambah Obat</a>
+            </div>
+        </div>
+    </div>
+    
+</body>
+</html>
