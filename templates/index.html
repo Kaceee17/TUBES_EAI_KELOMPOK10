@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nurse Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            font-family: Inter;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+            color: #f8f9fa;
+        }
+        .navbar {
+            background: #f8f9fa;
+        }
+        .navbar-brand {
+            padding-left: 15px;
+        }
+        .container-fluid {
+            padding: 20px;
+        }
+        .card {
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3 class="text-center">WELCOME</h3>
+        <!-- <a href="#" onclick="navigateTo('/index')" class="sidebar-link">Home</a>
+        <a href="#" onclick="navigateTo('/obat')" class="sidebar-link">Obat</a>
+        <a href="http://127.0.0.1:5002/resep?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
+        <a href="http://127.0.0.1:5003/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a> -->
+    </div>
+    
+
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#">Nurse Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form action="/logout" method="get">
+                            <button type="submit" class="btn btn-outline-primary">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Selamat Datang, {{ name }}!</h5>
+                            <p class="card-text">Anda dapat mengakses dan mengelola data obat, resep obat, dan rujukan medis di sini.</p>
+                        </div>
+                    </div>
+                </div>
+            </div> 
+            <div class="row">
+                <div class="col-lg-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Total Obat</h5>
+                            <p class="card-text">Data mengenai jumlah obat yang tersedia.</p>
+                            <h3>{{ total_obat }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Resep Obat</h5>
+                            <p class="card-text">Data mengenai resep obat yang telah diberikan.</p>
+                            <h3>{{ total_resep }}</h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4"> 
+                    <div class="card text-white bg-info mb-3">
+                        <div class="card-body">
+                            <h5 class="card-title">Rujukan Medis</h5>
+                            <p class="card-text">Data mengenai rujukan medis yang telah dibuat.</p>
+                            <h3>{{ total_rujukan }}</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('accessToken : ', accessToken)
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        fetch('http://127.0.0.1:5001/api/total_obat')
+        .then(response => response.json())
+        .then(data => {
+            const medsElement = document.getElementById('total_obat');
+            if (medsElement) {
+                medsElement.innerText = data.total_obat || 'Unavailable';
+            } else {
+                console.error('Element for total medications not found');
+            }
+        })    
+        fetch('http://127.0.0.1:5002/api/total_resep')
+        .then(response => response.json())
+        .then(data => {
+            const resepElement = document.getElementById('total_resep');
+            if (resepElement) {
+                resepElement.innerText = data.total_resep || 'Unavailable';
+            } else {
+                console.error('Element for total prescriptions not found');
+            }
+        })
+
+        fetch('http://127.0.0.1:5003/api/total_rujukan')
+        .then(response => response.json())
+        .then(data => {
+            const resepElement = document.getElementById('total_rujukan');
+            if (resepElement) {
+                resepElement.innerText = data.total_resep || 'Unavailable';
+            } else {
+                console.error('Element for total rujukan not found');
+            }
+        })
+    });
+    </script>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

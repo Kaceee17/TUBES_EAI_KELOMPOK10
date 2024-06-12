@@ -1,0 +1,184 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Inter;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .register-container {
+            width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .register-container h1 {
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .register-container label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .register-container input[type="text"],
+        .register-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .register-container .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .register-container .btn-register {
+            background-color: #007bff;
+            width: 300px;
+            height: auto;
+        }
+        .register-container .btn-register:hover {
+            background-color: #0056b3;
+        }
+        .register-container .btn-back {
+            background-color: #6c757d;
+            text-decoration: none;
+            display: inline-block;
+            width: 280px;
+            height: auto;
+        }
+        .register-container .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="register-container">
+        <h1>Register</h1>
+        <form action="/register" method="post">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="btn btn-register">Register</button>
+            <a href="/" class="btn btn-back">Back</a>
+        </form>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .register-container {
+            width: 300px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .register-container h1 {
+            margin-bottom: 40px;
+            color: #333;
+        }
+        .register-container label {
+            display: block;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+        .register-container input[type="text"],
+        .register-container input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        .register-container .btn {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .register-container .btn-register {
+            background-color: #007bff;
+        }
+        .register-container .btn-register:hover {
+            background-color: #0056b3;
+        }
+        .register-container .btn-back {
+            background-color: #6c757d;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .register-container .btn-back:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h1>Register</h1>
+        <form method="post">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit" class="btn btn-register">Register</button>
+            <a href="/" class="btn btn-back">Back</a>
+        </form>
+    </div>
+</body>
+</html>
