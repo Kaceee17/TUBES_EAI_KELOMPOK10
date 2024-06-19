@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Resep Obat</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            font-family: Inter;
+        }
+        #sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding: 15px;
+        }
+        #content {
+            flex-grow: 1;
+            padding: 20px;
+        }
+        .sidebar-link {
+            color: white;
+            display: block;
+            padding: 10px;
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            background: #495057;
+            text-decoration: none;
+        }
+        .btn-custom {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div id="sidebar">
+        <h3 class="text-center">WELCOME</h3>
+        <a href="/" class="sidebar-link">Home</a>
+        <a href="/obat" class="sidebar-link">Obat</a>
+        <a href="/resep" class="sidebar-link">Resep Obat</a>
+        <a href="/rujukan" class="sidebar-link">Rujukan Medis</a>
+    </div>
+
+    <div id="content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Nurse Dashboard</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <form action="/logout" method="get">
+                            <button type="submit" class="btn btn-outline-primary">Logout</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    
+        <div class="container mt-5">
+            <h2 class="text-center">Edit Resep Obat</h2>
+            <form method="POST" action="{{ url_for('ubah_resep', id=resep['id_resepobat']) }}">
+                <div class="form-group">
+                    <label for="id_pasien">ID Pasien</label>
+                    <input type="text" class="form-control text-gray" id="id_pasien" name="id_pasien" value="{{ resep['id_pasien'] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="id_obat">ID Obat</label>
+                    <input type="text" class="form-control text-gray" id="id_obat" name="id_obat" value="{{ resep['id_obat'] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="jumlah_obat">Jumlah Obat</label>
+                    <input type="number" class="form-control text-gray" id="jumlah_obat" name="jumlah_obat" value="{{ resep['jumlah_obat'] }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="keterangan_resep">Keterangan Resep</label>
+                    <textarea class="form-control text-gray" id="keterangan_resep" name="keterangan_resep" required>{{ resep['keterangan_resep'] }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary btn-custom">Update</button>
+            </form>
+            <a href="/resep" class="btn btn-secondary mt-3 btn-custom">Kembali</a>
+        </div>
+    </div>
+</body>
+</html>
