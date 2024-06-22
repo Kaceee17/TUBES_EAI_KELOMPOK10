@@ -139,10 +139,27 @@
                         {% endif %}
                     </ul>
                 </nav>
-                <a class="btn btn-success mb-3" href="{{ url_for('add_obat') }}?access_token={{ access_token }}">Tambah Obat</a>           
+                <a href="http://127.0.0.1:5001/addObat">Add Obat</a>
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('accessToken'); // Make sure the token is being saved to localStorage when logged in
+            fetch('http://127.0.0.1:5001/obat', { // Correct the URL based on what data you want to fetch
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Code to handle data for displaying obat
+                console.log(data);
+            })
+            .catch(error => console.error('Error:', error));
+        });
+        </script>
+        
     <script src="static\js\script.js"></script>
 </body>
 </html>

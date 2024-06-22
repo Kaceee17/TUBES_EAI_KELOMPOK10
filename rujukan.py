@@ -6,12 +6,14 @@ import bcrypt, jwt, time
 import logging
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
 CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000"}})
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+JWT_SECRET = 'your_jwt_secret'
+JWT_ALGORITHM = 'HS256'
 
 # MySQL configurations for rujukan
 app.config['MYSQL_HOST'] = 'localhost'
@@ -20,8 +22,6 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'manajemen_user'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-JWT_SECRET = 'your_jwt_secret'
-JWT_ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRES_IN = 60  # 16.6 minutes
 REFRESH_TOKEN_EXPIRES_IN = 3600  # 1 hour
 
@@ -72,31 +72,8 @@ def total_rujukan():
     cursor.close()
     return jsonify({'total_rujukan': total_rujukan})
 
-@app.route('/add_rujukan', methods=['POST'])
-def add_rujukan():
 
-    # untuk validate dia punya akses token atau ga
-    token, response, status = verify_jwt()
-    if response:
-        return response, status
-    
-    if request.method == 'POST':
-        data = request.get_json()
-        cursor = mysql.connection.cursor()
-        try:
-            cursor.execute(
-                "INSERT INTO rujukan (patient_id, doctor_id, referral_date, appointment_date, status, notes, created_at, updated_at) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
-                (data['patient_id'], data['doctor_id'], data['referral_date'], data['appointment_date'], data['status'], data['notes'], datetime.now(), datetime.now())
-            )
-            mysql.connection.commit()
-            return jsonify({"message": "Rujukan added successfully"}), 201
-        except Exception as e:
-            return jsonify({"error": str(e)}), 400
-        finally:
-            cursor.close()
-    return jsonify({"message": "Use POST method to add rujukan"}), 405
-
-@app.route('/delete_rujukan/<int:id>', methods=['DELETE'])
+@app.route('/api/delete_rujukan/<int:id>', methods=['DELETE'])
 def delete_rujukan(id):
 
     # untuk validate dia punya akses token atau ga
@@ -116,7 +93,7 @@ def delete_rujukan(id):
     finally:
         cursor.close()
 
-@app.route('/rujukan', methods=['GET'])
+@app.route('/api/rujukan', methods=['GET'])
 def get_rujukan():
 
     # untuk validate dia punya akses token atau ga
@@ -180,7 +157,7 @@ def get_rujukan():
         'total_pages': total_pages
     })
 
-@app.route('/rujukan/<int:id>', methods=['GET'])
+@app.route('/api/rujukan/<int:id>', methods=['GET'])
 def get_single_rujukan(id):
 
     # untuk validate dia punya akses token atau ga
@@ -200,7 +177,7 @@ def get_single_rujukan(id):
     cursor.close()
     return jsonify(result)
 
-@app.route('/addrujukan', methods=['GET', 'POST'])
+@app.route('/api/addrujukan', methods=['GET', 'POST'])
 def addrujukan():
 
     # untuk validate dia punya akses token atau ga
@@ -233,7 +210,7 @@ def addrujukan():
 
         return redirect(url_for('get_rujukan'))
 
-@app.route('/edit_rujukan/<int:id>', methods=['GET', 'POST'])
+@app.route('/api/edit_rujukan/<int:id>', methods=['GET', 'POST'])
 def edit_rujukan(id):
 
     # untuk validate dia punya akses token atau ga

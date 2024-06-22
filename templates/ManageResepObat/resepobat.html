@@ -37,9 +37,9 @@
     <div id="sidebar">
         <h3 class="text-center">WELCOME</h3>
         <a href="#" onclick="navigateTo('/index')" class="sidebar-link">Home</a>
-        <a href="http://127.0.0.1:5001/obat?access_token={{ access_token }}" class="sidebar-link">Obat</a>
-        <a href="http://127.0.0.1:5002/resep?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
-        <a href="http://127.0.0.1:5003/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a>
+        <a href="#" onclick="navigateTo('/obat')" class="sidebar-link">Obat</a>
+        <a href="#" onclick="navigateTo('/resepobat')" class="sidebar-link">Resep Obat</a>
+        <a href="#" onclick="navigateTo('/rujukan')" class="sidebar-link">Rujukan Medis</a>
     </div>
 
     <div id="content">
@@ -131,11 +131,25 @@
                         {% endif %}
                     </ul>
                 </nav>
-                <a class="btn btn-success mb-3" href="{{ url_for('buat_resep') }}?access_token={{ access_token }}">Tambah Resep</a>           
+                <a class="btn btn-success mb-3" href="{{ url_for('buat_resep') }}">Tambah Resep</a>
             </div>
         </div>
     </div>
     <script src="static\js\script.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const token = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
+            fetch('http://127.0.0.1:5002/api/resep', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })                
+            .then(response => response.json())
+
+    });</script>
+
 
 </body>
 </html>

@@ -6,12 +6,14 @@ import bcrypt, jwt, time
 import logging
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
 CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000"}})
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+JWT_SECRET = 'your_jwt_secret'
+JWT_ALGORITHM = 'HS256'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
@@ -19,8 +21,6 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'manajemen_user'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-JWT_SECRET = 'your_jwt_secret'
-JWT_ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRES_IN = 60  # 16.6 minutes
 REFRESH_TOKEN_EXPIRES_IN = 3600  # 1 hour
 
@@ -35,6 +35,7 @@ def decode_token(token):
     except jwt.InvalidTokenError:
         logger.error("Invalid token")
         return None
+
     
 def verify_jwt():
     accessToken = request.headers.get('Authorization')
@@ -63,8 +64,11 @@ def root():
 @app.route('/api/total_obat', methods=['GET'])
 def total_obat():
     token, response, status = verify_jwt()
+    
+    # Check if the verification function returned an error response
     if response:
         return response, status
+
     
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT COUNT(*) AS total FROM obat")
@@ -85,10 +89,8 @@ def dashboard():
 
     return render_template('dashboard.html', total_obat=total_obat)
 
-@app.route('/obat', methods=['GET'])
+@app.route('/api/obat', methods=['GET'])
 def get_obat():
-    
-    # untuk validate dia punya akses token atau ga
     token, response, status = verify_jwt()
     if response:
         return response, status
@@ -110,7 +112,7 @@ def get_obat():
     cursor = mysql.connection.cursor()
     cursor.execute(query, count_args)
     total_items = cursor.fetchone()['COUNT(*)']
-    
+
     offset = (page - 1) * per_page
     query = "SELECT * FROM obat"
     args = []
@@ -122,12 +124,13 @@ def get_obat():
         args.append(kategori)
     query += " LIMIT %s OFFSET %s"
     args.extend([per_page, offset])
-    
+
     cursor.execute(query, args)
     rows = cursor.fetchall()
     cursor.close()
 
-    # Format date fields and currency
+    logger.debug(f"Fetched {len(rows)} rows")
+
     data = []
     for row in rows:
         formatted_row = {key: value for key, value in row.items()}
@@ -136,17 +139,16 @@ def get_obat():
         if 'harga' in row:
             formatted_row['harga'] = "{:,}".format(int(row['harga']))
         data.append(formatted_row)
-    
+
     total_pages = (total_items + per_page - 1) // per_page  # Calculate total pages
-    
-    # Return data as JSON
+
     return jsonify({
         'data': data,
         'page': page,
         'total_pages': total_pages
     })
 
-@app.route('/addObat', methods=['GET', 'POST'])
+@app.route('/api/addObat', methods=['GET', 'POST'])
 def add_obat():
 
     # untuk validate dia punya akses token atau ga
@@ -155,7 +157,7 @@ def add_obat():
         return response, status
 
     if request.method == 'GET':
-        return render_template('ManageObat/addobat.html')
+        return render_template('addObat.html')
     elif request.method == 'POST':
         data = request.get_json()
         required_fields = ['nama', 'deskripsi', 'kategori', 'tanggal_kedaluwarsa', 'jumlah_stok', 'harga']
@@ -178,7 +180,7 @@ def add_obat():
         return jsonify({'message': 'Obat added successfully'})
 
 
-@app.route('/editObat/<int:id>', methods=['GET', 'POST'])
+@app.route('/api/editObat/<int:id>', methods=['GET', 'POST'])
 def edit_obat(id):
 
     # untuk validate dia punya akses token atau ga
@@ -217,7 +219,7 @@ def edit_obat(id):
         return jsonify({'message': 'Obat updated successfully'})
 
 
-@app.route('/deleteObat/<int:id>', methods=['DELETE'])
+@app.route('/api/deleteObat/<int:id>', methods=['DELETE'])
 def delete_obat(id):
 
     # untuk validate dia punya akses token atau ga

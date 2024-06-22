@@ -6,12 +6,14 @@ import bcrypt, jwt, time
 import logging
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'
 CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000"}})
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
+
+JWT_SECRET = 'your_jwt_secret'
+JWT_ALGORITHM = 'HS256'
 
 # MySQL configurations
 app.config['MYSQL_HOST'] = 'localhost'
@@ -20,8 +22,6 @@ app.config['MYSQL_PASSWORD'] = ''
 app.config['MYSQL_DB'] = 'manajemen_user'
 app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
-JWT_SECRET = 'your_jwt_secret'
-JWT_ALGORITHM = 'HS256'
 ACCESS_TOKEN_EXPIRES_IN = 60  # 16.6 minutes
 REFRESH_TOKEN_EXPIRES_IN = 3600  # 1 hour
 
@@ -56,6 +56,7 @@ def verify_jwt():
 
     return token, None, None
 
+
 @app.route('/')
 def root():
     return 'Selamat datang di Pusat Informasi Resep Obat'
@@ -64,8 +65,8 @@ def root():
 def total_resep():
     token, response, status = verify_jwt()
     if response:
-        return response, status
-    
+       return response, status
+
     cursor = mysql.connection.cursor()
     cursor.execute("SELECT COUNT(*) AS total FROM resep_obat")
     total_resep = cursor.fetchone()['total']
@@ -76,7 +77,7 @@ def total_resep():
 def buat_respons_kesalahan(pesan, kode):
     return jsonify({'pesan': pesan}), kode
 
-@app.route('/addresep', methods=['GET', 'POST'])
+@app.route('/api/addresep', methods=['GET', 'POST'])
 def buat_resep():
 
     # untuk validate dia punya akses token atau ga
@@ -133,7 +134,7 @@ def buat_resep():
 
 
 
-@app.route('/resep', methods=['GET'])
+@app.route('/api/resep', methods=['GET'])
 def baca_resep():
 
     # untuk validate dia punya akses token atau ga
@@ -185,7 +186,7 @@ def baca_resep():
         return jsonify({'error': str(e)}), 500
 
 
-@app.route('/ubahResep/<int:id>', methods=['GET', 'POST'])
+@app.route('/api/ubahResep/<int:id>', methods=['GET', 'POST'])
 def ubah_resep(id):
 
     # untuk validate dia punya akses token atau ga
@@ -226,7 +227,7 @@ def ubah_resep(id):
 
 
         
-@app.route('/resep/delete/<int:id>', methods=['DELETE'])
+@app.route('/api/resep/delete/<int:id>', methods=['DELETE'])
 def hapus_resep(id):
 
     # untuk validate dia punya akses token atau ga

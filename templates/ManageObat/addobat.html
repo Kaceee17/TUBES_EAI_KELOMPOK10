@@ -36,14 +36,6 @@
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <h3 class="text-center">WELCOME</h3>
-        <a href="http://127.0.0.1:5000/index?access_token={{ access_token }}" class="sidebar-link">Home</a>
-        <a href="http://127.0.0.1:5001/obat?access_token={{ access_token }}" class="sidebar-link">Obat</a>
-        <a href="http://127.0.0.1:5002/resep?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
-        <a href="http://127.0.0.1:5003/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a>
-    </div>
-
     <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Nurse Dashboard</a>
@@ -56,7 +48,6 @@
                         <form action="/logout" method="get">
                             <button type="submit" class="btn btn-outline-primary">Logout</button>
                         </form>
-                        </li>
                     </li>
                 </ul>
             </div>
@@ -64,7 +55,7 @@
     
         <div class="container mt-5">
             <h2 class="text-center">Tambah Obat</h2>
-            <form action="/addObat?access_token={{ access_token }}" method="POST">
+            <form id="addObatForm" action="" method="POST">
                 <div class="form-group">
                     <label for="nama">Nama Obat</label>
                     <input type="text" class="form-control" id="nama" name="nama" required>
@@ -94,6 +85,11 @@
             <a href="/obat?access_token={{ access_token }}" class="btn btn-secondary mt-3 btn-custom">Kembali</a>
         </div>
     </div>
+
+    <script>
+        const accessToken = localStorage.getItem('accessToken');
+        console.log('accessToken : ', accessToken)
+    </script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

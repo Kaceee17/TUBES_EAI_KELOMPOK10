@@ -171,36 +171,29 @@ def index():
     if token:
         decoded = decode_token(token)
         if decoded:
-            # API call to obat.py to get total_obat
+            # API call to fetch data
             try:
                 obat_response = requests.get('http://127.0.0.1:5001/api/total_obat', headers={'Authorization': 'Bearer ' + token})
                 total_obat = obat_response.json().get('total_obat', 'Unavailable')
-            except requests.RequestException as e:
-                total_obat = 'Unavailable'
-                logger.error("Failed to fetch total_obat: {}".format(e))
-
-            try:
                 resep_response = requests.get('http://127.0.0.1:5002/api/total_resep', headers={'Authorization': 'Bearer ' + token})
                 total_resep = resep_response.json().get('total_resep', 'Unavailable')
-            except requests.RequestException as e:
-                total_resep = 'Unavailable'
-                logger.error("Failed to fetch total_resep: {}".format(e))
-
-            try:
                 rujukan_response = requests.get('http://127.0.0.1:5003/api/total_rujukan', headers={'Authorization': 'Bearer ' + token})
                 total_rujukan = rujukan_response.json().get('total_rujukan', 'Unavailable')
             except requests.RequestException as e:
-                total_rujukan = 'Unavailable'
-                logger.error("Failed to fetch total_rujukan: {}".format(e))
+                logger.error(f"Failed to fetch data: {e}")
+                total_obat = total_resep = total_rujukan = 'Unavailable'
 
-            return render_template('index.html', name=decoded['name'], total_resep=total_resep, total_obat = total_obat, total_rujukan=total_rujukan)
+            # Ensure 'page' and 'total_pages' are defined for pagination
+            page = 1  # Default to the first page
+            total_pages = 1  # Default to one page unless dynamically calculated
+
+            return render_template('index.html', name=decoded['name'], total_obat=total_obat, total_resep=total_resep, total_rujukan=total_rujukan, page=page, total_pages=total_pages)
         else:
             response = make_response("Token is invalid or expired. Please login again.", 403)
             response.delete_cookie('access_token')  # Remove the invalid cookie
             return response
         
     return redirect(url_for('login'))
-
 
 # @app.route('/index')
 # def index():

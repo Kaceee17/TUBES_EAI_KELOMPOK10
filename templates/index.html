@@ -48,15 +48,7 @@
     </style>
 </head>
 <body>
-    <div id="sidebar">
-        <h3 class="text-center">WELCOME</h3>
-        <!-- <a href="#" onclick="navigateTo('/index')" class="sidebar-link">Home</a>
-        <a href="#" onclick="navigateTo('/obat')" class="sidebar-link">Obat</a>
-        <a href="http://127.0.0.1:5002/resep?access_token={{ access_token }}" class="sidebar-link">Resep Obat</a>
-        <a href="http://127.0.0.1:5003/rujukan?access_token={{ access_token }}" class="sidebar-link">Rujukan Medis</a> -->
-    </div>
     
-
     <div id="content">
         <nav class="navbar navbar-expand-lg navbar-light">
             <a class="navbar-brand" href="#">Nurse Dashboard</a>
@@ -113,7 +105,240 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="mt-4">
+                        <h2 class="text-center">Daftar Obat</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped centered-content">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">#</th>
+                                        <th scope="col">Nama Obat</th>
+                                        <th scope="col">Deskripsi</th>
+                                        <th scope="col">Kategori</th>
+                                        <th scope="col">Tanggal Kedaluwarsa</th>
+                                        <th scope="col" class="text-center">Harga</th>      
+                                        <th scope="col" class="text-center">Jumlah Stok</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="obatTableBody">
+                                    {% for row in data %}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{ loop.index }}</th>
+                                        <td>{{ row['nama'] }}</td>
+                                        <td>{{ row['deskripsi'] }}</td>
+                                        <td>{{ row['kategori'] }}</td>
+                                        <td>{{ row['tanggal_kedaluwarsa'] }}</td>
+                                        <td class="text-center">{{ row['harga'] }}</td>
+                                        <td class="text-center">{{ row['jumlah_stok'] }}</td>
+                                        <td class="text-center">
+                                            <a href="/editObat/{{ row['id'] }}?access_token={{ access_token }}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form method="POST" action="{{ url_for('delete_obat', id=row.id) }}?access_token={{ access_token }}" style="display:inline;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                                {% for p in range(1, total_pages + 1) %}
+                                <li class="page-item {% if p == page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                                </li>
+                                {% endfor %}
+                                {% if page < total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        <button id="addObatButton" class="btn btn-success mb-3">Tambah Obat</button>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="mt-4">
+                        <h2 class="text-center">Daftar Resep Obat</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped centered-content">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">#</th>
+                                        <th scope="col">Nama Obat</th>
+                                        <th scope="col">Keterangan Resep</th>
+                                        <th scope="col" class="text-center">Jumlah Obat</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resepTableBody">
+                                    {% for row in hasil %}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{ loop.index }}</th>
+                                        <td>{{ row['nama_obat'] }}</td>
+                                        <td>{{ row['keterangan_resep'] }}</td>
+                                        <td class="text-center">{{ row['jumlah_obat'] }}</td>
+                                        <td class="text-center">
+                                            <!-- Edit button -->
+                                            <a href="http://127.0.0.1:5001/api/resep/edit/{{ row['id_resepobat'] }}" class="btn btn-primary btn-sm">Edit</a>
+                                            <!-- Delete form -->
+                                            <form method="POST" action="{{ url_for('hapus_resep', id=row['id_resepobat']) }}" style="display:inline;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+        
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                                {% for p in range(1, total_pages + 1) %}
+                                <li class="page-item {% if p == page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                                </li>
+                                {% endfor %}
+                                {% if page < total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+                        <a class="btn btn-success mb-3" href="http://127.0.0.1:5002/api/addresep?access_token={{ access_token }}">Tambah Resep</a>
+                    </div>
+                </div>
+                <div class="col-lg-12">
+                    <div class="mt-4">
+                        <h2 class="text-center">Daftar Rujukan</h2>
+                        <div class="table-responsive">
+                            <table class="table table-striped centered-content">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="text-center">#</th>
+                                        <th scope="col" class="text-center">ID Patient</th>
+                                        <th scope="col" class="text-center">ID Doctor</th>
+                                        <th scope="col" class="text-center">Referral Date</th>
+                                        <th scope="col" class="text-center">Appointment Date</th>
+                                        <th scope="col" class="text-center">Status</th>
+                                        <th scope="col" class="text-center">Notes</th>
+                                        <th scope="col" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="rujukanTableBody"></tbody>                                    {% for row in result %}
+                                    <tr>
+                                        <th scope="row" class="text-center">{{ loop.index }}</th>
+                                        <td class="text-center">{{ row['patient_id'] }}</td>
+                                        <td class="text-center">{{ row['doctor_id'] }}</td>
+                                        <td class="text-center">{{ row['referral_date'] }}</td>
+                                        <td class="text-center">{{ row['appointment_date'] }}</td>
+                                        <td>{{ row['status'] }}</td>
+                                        <td>{{ row['notes'] }}</td>
+                                        <td class="text-center">
+                                            <a href="http://127.0.0.1:5003/api/resep/edit/{{ row['id_resepobat'] }}?access_token={{ access_token }}" class="btn btn-primary btn-sm">Edit</a>
+                                            <form method="POST" action="/delete_rujukan/{{ row['id'] }}" style="display:inline;">
+                                                <input type="hidden" name="_method" value="DELETE">
+                                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+        
+                        <!-- Pagination controls -->
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center">
+                                {% if page > 1 %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page - 1 }}" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                                {% for p in range(1, total_pages + 1) %}
+                                <li class="page-item {% if p == page %}active{% endif %}">
+                                    <a class="page-link" href="?page={{ p }}">{{ p }}</a>
+                                </li>
+                                {% endfor %}
+                                {% if page < total_pages %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ page + 1 }}" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                {% else %}
+                                <li class="page-item disabled">
+                                    <span class="page-link" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </span>
+                                </li>
+                                {% endif %}
+                            </ul>
+                        </nav>
+        
+                        <a class="btn btn-success mb-3" href="http://127.0.0.1:5003/api/addrujukan?access_token={{ access_token }}">Tambah Rujukan</a>
+                    </div>
+                </div>
+            </div>
         </div>
+        
     </div>
     
     <script>
@@ -122,18 +347,40 @@
     </script>
 
     <script>
+    function navigateTo(url) {
+    const token = localStorage.getItem('accessToken');
+    if (token) {
+        window.location.href = url + '?access_token=' + encodeURIComponent(token);
+    } else {
+        console.error('No access token found');
+        window.location.href = '/login'; // Redirect to login if no token is found
+     }
+    }
+    </script>
+    
+    <script>
     document.addEventListener('DOMContentLoaded', function() {
-        fetch('http://127.0.0.1:5001/api/total_obat')
+        const token = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
+        fetch('http://127.0.0.1:5001/api/total_obat', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.json())
         .then(data => {
-            const medsElement = document.getElementById('total_obat');
-            if (medsElement) {
-                medsElement.innerText = data.total_obat || 'Unavailable';
-            } else {
-                console.error('Element for total medications not found');
+            const obatElement = document.getElementById('total_obat'); // Ensure you have this element in your HTML
+            if (obatElement) {
+                obatElement.textContent = data.total_obat || 'Unavailable';
             }
-        })    
-        fetch('http://127.0.0.1:5002/api/total_resep')
+        })
+        .catch(error => console.error('Failed to fetch total obat:', error));
+
+        // Corrected fetch for total_resep
+        fetch('http://127.0.0.1:5002/api/total_resep', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.json())
         .then(data => {
             const resepElement = document.getElementById('total_resep');
@@ -143,17 +390,153 @@
                 console.error('Element for total prescriptions not found');
             }
         })
+        .catch(error => console.error('Failed to fetch total resep:', error));
 
-        fetch('http://127.0.0.1:5003/api/total_rujukan')
+        // Corrected fetch for total_rujukan
+        fetch('http://127.0.0.1:5003/api/total_rujukan', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
         .then(response => response.json())
         .then(data => {
-            const resepElement = document.getElementById('total_rujukan');
-            if (resepElement) {
-                resepElement.innerText = data.total_resep || 'Unavailable';
+            const rujukanElement = document.getElementById('total_rujukan');
+            if (rujukanElement) {
+                rujukanElement.innerText = data.total_rujukan || 'Unavailable';
             } else {
                 console.error('Element for total rujukan not found');
             }
         })
+        .catch(error => console.error('Failed to fetch total rujukan:', error));
+
+    });</script>
+
+    <script>
+    // Define the function that updates the table with obat data
+    function displayObat(data) {
+        const tableBody = document.getElementById('obatTableBody'); // Make sure your table has a tbody with this ID
+        tableBody.innerHTML = ''; // Clear existing table rows
+    
+        data.forEach((item, index) => {
+            const row = tableBody.insertRow();
+            row.insertCell(0).innerHTML = index + 1;
+            row.insertCell(1).innerHTML = item.nama;
+            row.insertCell(2).innerHTML = item.deskripsi;
+            row.insertCell(3).innerHTML = item.kategori;
+            row.insertCell(4).innerHTML = item.tanggal_kedaluwarsa;
+            row.insertCell(5).innerHTML = item.harga;
+            row.insertCell(6).innerHTML = item.jumlah_stok;
+            // Add more cells for additional data if needed
+        });
+    }
+    
+    // Existing script to fetch obat data
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('accessToken'); // Assuming the token is stored in localStorage
+    
+        fetch('http://127.0.0.1:5001/api/obat', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.data) {
+                displayObat(data.data); // Call the displayObat function with the fetched data
+            }
+        })
+        .catch(error => console.error('Failed to fetch obat:', error));
+    });
+    </script>
+
+
+    <script>
+    // Function to display data in Daftar Resep Obat
+    function displayResepObat(data) {
+    const tableBody = document.getElementById('resepTableBody');
+    tableBody.innerHTML = '';  // Clear existing table rows
+
+    // Make sure to use 'data.hasil' to correctly reference the list of prescriptions
+    data.hasil.forEach((item, index) => {
+        const row = tableBody.insertRow();
+        row.insertCell(0).innerHTML = index + 1;
+        row.insertCell(1).innerHTML = item.nama_obat;  // Verify 'nama_obat' is the correct key
+        row.insertCell(2).innerHTML = item.keterangan_resep;  // Verify 'keterangan_resep'
+        row.insertCell(3).innerHTML = item.jumlah_obat;  // Verify 'jumlah_obat'
+        // Add actions if there are any
+        const actionsCell = row.insertCell(4);
+        actionsCell.innerHTML = `<a href="/resep/edit/${item.id_resepobat}" class="btn btn-primary btn-sm">Edit</a>
+                                 <form method="POST" action="/delete_resep/${item.id_resepobat}" style="display:inline;">
+                                     <input type="hidden" name="_method" value="DELETE">
+                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                 </form>`;
+        });
+    }
+
+    // Fetch data on document load
+    document.addEventListener('DOMContentLoaded', function() {
+        const token = localStorage.getItem('accessToken');  // Assuming the token is stored in localStorage
+
+        fetch('http://127.0.0.1:5002/api/resep', {
+            headers: { 'Authorization': `Bearer ${token}` }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.hasil) { // Ensure the data object has a 'hasil' key
+                displayResepObat(data);  // Call the displayResepObat function with the fetched data
+            }
+        })
+        .catch(error => console.error('Failed to fetch resep obat:', error));
+    });
+    </script>
+
+    <script>
+    function displayRujukan(data) {
+    const tableBody = document.getElementById('rujukanTableBody');
+    tableBody.innerHTML = '';  // Clear existing table rows
+
+    data.result.forEach((item, index) => {
+        const row = tableBody.insertRow();
+        row.insertCell(0).innerHTML = index + 1;
+        row.insertCell(1).innerHTML = item.patient_id;
+        row.insertCell(2).innerHTML = item.doctor_id;
+        row.insertCell(3).innerHTML = item.referral_date;
+        row.insertCell(4).innerHTML = item.appointment_date;
+        row.insertCell(5).innerHTML = item.status;
+        row.insertCell(6).innerHTML = item.notes;
+        const actionsCell = row.insertCell(7);
+        actionsCell.innerHTML = `<a href="/rujukan/edit/${item.id}" class="btn btn-primary btn-sm">Edit</a>
+                                 <form method="POST" action="/delete_rujukan/${item.id}" style="display:inline;">
+                                     <input type="hidden" name="_method" value="DELETE">
+                                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                 </form>`;
+        });
+    }
+
+    // Fetch data on document load
+    document.addEventListener('DOMContentLoaded', function() {
+    const token = localStorage.getItem('accessToken');  // Assuming the token is stored in localStorage
+
+    fetch('http://127.0.0.1:5003/api/rujukan', {
+        headers: { 'Authorization': `Bearer ${token}` }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.result) {  // Ensure the data object has a 'result' key
+            displayRujukan(data);  // Call the displayRujukan function with the fetched data
+        }
+    })
+    .catch(error => console.error('Failed to fetch rujukan:', error));
+    });
+    </script>
+
+    <script>
+    document.getElementById('addObatButton').addEventListener('click', function() {
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            window.location.href = `http://127.0.0.1:5001/api/addObat?access_token=${encodeURIComponent(token)}`;
+        } else {
+            console.error('No access token found');
+            window.location.href = '/login'; // Redirect to login if no token is found
+        }
     });
     </script>
     
