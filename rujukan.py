@@ -2,8 +2,8 @@ from flask import Flask, jsonify, request, render_template, url_for, redirect
 from flask_mysqldb import MySQL
 from flask_cors import CORS
 from datetime import datetime
-import bcrypt, jwt, time
-import logging
+import bcrypt, jwt, time, pika, logging
+
 
 app = Flask(__name__)
 CORS(app, resources={r"/api/*": {"origins": "http://127.0.0.1:5000"}})
@@ -189,11 +189,11 @@ def addrujukan():
         return render_template('ManageRujukan/addrujukan.html')
     
     elif request.method == 'POST':
-        data = request.form
+        data = request.json
         required_fields = ['patient_id', 'doctor_id', 'referral_date', 'appointment_date', 'status', 'notes']
         
         if not all(data.get(field) for field in required_fields):
-            return render_template('ManageRujukan/addrujukan.html', error="Data yang diperlukan tidak lengkap"), 400
+            return jsonify({"error": "Data yang diperlukan tidak lengkap"}), 400
 
         try:
             cursor = mysql.connection.cursor()
@@ -202,13 +202,26 @@ def addrujukan():
                 (data['patient_id'], data['doctor_id'], data['referral_date'], data['appointment_date'], data['status'], data['notes'], datetime.now(), datetime.now())
             )
             mysql.connection.commit()
+            
+            # Setup RabbitMQ connection
+            credentials = pika.PlainCredentials('guest', 'guest')
+            parameters = pika.ConnectionParameters('127.0.0.1', 5672, '/', credentials)
+            connection = pika.BlockingConnection(parameters)
+            channel = connection.channel()
+
+            # Declare queues
+            channel.queue_declare(queue='NurseTerima')
+            channel.basic_publish(exchange='', routing_key='NurseTerima', body='Rujukan data telah dikirim ke Nurse!')
+            print(" [x] Sent 'Rujukan data telah dikirim ke Nurse!'")
+
+            connection.close()
+
+            return jsonify({"message": "Rujukan added successfully"}), 200
         except Exception as e:
             mysql.connection.rollback()
-            return render_template('ManageRujukan/addrujukan.html', error=str(e)), 500
+            return jsonify({"error": str(e)}), 500
         finally:
             cursor.close()
-
-        return redirect(url_for('get_rujukan'))
 
 @app.route('/api/edit_rujukan/<int:id>', methods=['GET', 'POST'])
 def edit_rujukan(id):
